@@ -19,18 +19,20 @@ function App() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:8001/api/products');
+      // Đã cập nhật Link Render của Product Service
+      const res = await fetch('https://product-service-ecommerce-ynv9.onrender.com/api/products');
       const data = await res.json();
       if (data.status === 'success') setProducts(data.data);
-    } catch (err) { console.error("Lỗi kết nối 8001:", err); }
+    } catch (err) { console.error("Lỗi kết nối Product Service:", err); }
   };
 
   const fetchWalletBalance = async () => {
     try {
-      const res = await fetch(`http://localhost:8003/api/payments/wallets/${USER_ID}`);
+      // Đã cập nhật Link Render của Payment Service
+      const res = await fetch(`https://soa-paymentservice.onrender.com/api/payments/wallets/${USER_ID}`);
       const data = await res.json();
       if (data.status === 'success') setWalletBalance(data.data.balance);
-    } catch (err) { console.error("Lỗi kết nối 8003:", err); }
+    } catch (err) { console.error("Lỗi kết nối Payment Service:", err); }
   };
 
   // --- LOGIC TRÙM CUỐI: XỬ LÝ THANH TOÁN (SAGA ORCHESTRATOR) ---
@@ -42,8 +44,8 @@ function App() {
       // Ép kiểu dữ liệu giỏ hàng cho đúng định dạng Order Service cần
       const orderItems = cart.map(item => ({ productId: item.id, quantity: item.quantity }));
       
-      // Bắn API sang cổng 8002 (Order Service)
-      const res = await fetch('http://localhost:8002/api/orders', {
+      // Đã cập nhật Link Render của Order Service
+      const res = await fetch('https://order-service-api-gxj0.onrender.com/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: USER_ID, items: orderItems })
@@ -63,7 +65,7 @@ function App() {
         setNotification(`❌ Giao dịch thất bại: ${data.message} (Đã hoàn tác kho)`);
       }
     } catch (error) {
-      setNotification('🚨 Lỗi máy chủ. Vui lòng kiểm tra lại Order Service (cổng 8002).');
+      setNotification('🚨 Lỗi máy chủ. Vui lòng kiểm tra lại Order Service trên Render.');
     } finally {
       // Tắt màn hình loading sau 1.5 giây để user kịp nhìn hiệu ứng
       setTimeout(() => {
@@ -270,7 +272,7 @@ function App() {
              <div className="mt-8 text-center bg-card py-6 px-8 rounded-3xl border border-[#EBE3D5]">
                <p className="text-sm text-dark font-medium mb-2">💡 Hết tiền để test?</p>
                <p className="text-xs text-muted leading-relaxed">
-                 Mở Postman, tạo lệnh <b>POST</b> tới <code className="bg-white px-2 py-1 rounded text-accent">http://localhost:8003/api/payments/wallets/topup</code><br/>
+                 Mở Postman, tạo lệnh <b>POST</b> tới <code className="bg-white px-2 py-1 rounded text-accent">https://soa-paymentservice.onrender.com/api/payments/wallets/topup</code><br/>
                  với body: <code className="bg-white px-2 py-1 rounded text-accent">{`{"userId": "123", "amount": 500000}`}</code> để nạp 500k nhé!
                </p>
              </div>
