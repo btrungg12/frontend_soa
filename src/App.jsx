@@ -5,17 +5,28 @@ const USER_ID = "123";
 function App() {
   const [currentTab, setCurrentTab] = useState('home');
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+  const savedCart = localStorage.getItem('serein_cart');
+  return savedCart ? JSON.parse(savedCart) : [];
+});
   const [walletBalance, setWalletBalance] = useState(0); 
   const [notification, setNotification] = useState(null);
   
   // BƯỚC 3: State quản lý hiệu ứng Loading của Saga
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Đoạn cũ đang có:
   useEffect(() => {
     fetchProducts();
     fetchWalletBalance();
   }, []);
+
+  // --- THÊM ĐOẠN NÀY VÀO NGAY ĐÂY ---
+  // Cứ mỗi khi 'cart' có biến động (thêm, bớt, xóa), tự động lưu xuống ổ cứng
+  useEffect(() => {
+    localStorage.setItem('serein_cart', JSON.stringify(cart));
+  }, [cart]);
+  // ---------------------------------
 
   const fetchProducts = async () => {
     try {
