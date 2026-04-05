@@ -90,6 +90,25 @@ function App() {
     setCart(cart.filter(item => item.id !== productId));
   };
 
+  // --- HÀM TĂNG GIẢM SỐ LƯỢNG ---
+  const decreaseQuantity = (productId) => {
+    setCart(cart.map(item => {
+      if (item.id === productId && item.quantity > 1) {
+        return { ...item, quantity: item.quantity - 1 };
+      }
+      return item;
+    }));
+  };
+
+  const increaseQuantity = (productId) => {
+    setCart(cart.map(item => {
+      if (item.id === productId && item.quantity < item.stock) {
+        return { ...item, quantity: item.quantity + 1 };
+      }
+      return item;
+    }));
+  };
+
   const totalCartValue = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -206,10 +225,33 @@ function App() {
                         <div className="flex-1">
                           <h3 style={{ fontFamily: '"Playfair Display", serif' }} className="text-xl font-medium">{item.name}</h3>
                           <p className="text-muted mt-1">Đơn giá: {(item.price / 1000).toLocaleString()}k đ</p>
-                          <div className="flex items-center gap-4 mt-3">
-                             <span className="text-sm font-medium">Số lượng: <span className="bg-card px-4 py-1 rounded-full ml-1">{item.quantity}</span></span>
-                             <button onClick={() => removeFromCart(item.id)} className="text-red-400 text-xs hover:underline">Xóa bỏ</button>
+                          
+                          {/* ĐÃ CẬP NHẬT GIAO DIỆN NÚT CỘNG TRỪ Ở ĐÂY */}
+                          <div className="flex items-center gap-5 mt-4">
+                             <div className="flex items-center bg-[#FDFBF7] rounded-full p-1 shadow-sm border border-[#EBE3D5]">
+                               <button 
+                                 onClick={() => decreaseQuantity(item.id)} 
+                                 className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#EBE3D5] text-dark transition font-medium"
+                               >
+                                 -
+                               </button>
+                               <span className="text-sm font-bold w-8 text-center text-accent">{item.quantity}</span>
+                               <button 
+                                 onClick={() => increaseQuantity(item.id)} 
+                                 disabled={item.quantity >= item.stock}
+                                 className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#EBE3D5] text-dark transition font-medium disabled:opacity-30 disabled:cursor-not-allowed"
+                               >
+                                 +
+                               </button>
+                             </div>
+                             <button 
+                               onClick={() => removeFromCart(item.id)} 
+                               className="text-red-400 text-sm hover:text-red-600 hover:underline font-medium"
+                             >
+                               Xóa bỏ
+                             </button>
                           </div>
+                          
                         </div>
                         <p className="text-xl font-serif font-bold text-dark">{(item.price * item.quantity / 1000).toLocaleString()}k đ</p>
                       </div>
