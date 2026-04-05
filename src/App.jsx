@@ -45,7 +45,7 @@ function App() {
       const orderItems = cart.map(item => ({ productId: item.id, quantity: item.quantity }));
       
       // Đã cập nhật Link Render của Order Service
-      const res = await fetch('https://order-service-api-gxj0.onrender.com/api/orders', {
+      const res = await fetch('https://order-service-api-pl9d.onrender.com/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: USER_ID, items: orderItems })
