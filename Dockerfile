@@ -1,8 +1,7 @@
 # ==========================================
 # GIAI ĐOẠN 1: BUILD GIAO DIỆN REACT (VITE)
 # ==========================================
-FROM node:18-alpine as build-stage
-
+FROM node:20-alpine AS build-stage
 # Tạo thư mục làm việc
 WORKDIR /app
 
