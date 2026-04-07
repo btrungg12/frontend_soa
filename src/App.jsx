@@ -31,7 +31,7 @@ function App() {
   const fetchProducts = async () => {
     try {
       // Đã cập nhật Link Render của Product Service
-      const res = await fetch('https://product-service-ecommerce-ynv9.onrender.com/api/products');
+      const res = await fetch('/api/products');
       const data = await res.json();
       if (data.status === 'success') setProducts(data.data);
     } catch (err) { console.error("Lỗi kết nối Product Service:", err); }
@@ -40,7 +40,7 @@ function App() {
   const fetchWalletBalance = async () => {
     try {
       // Đã cập nhật Link Render của Payment Service
-      const res = await fetch(`https://soa-paymentservice.onrender.com/api/payments/wallets/${USER_ID}`);
+      const res = await fetch('/api/payments/wallets/' + USER_ID);
       const data = await res.json();
       if (data.status === 'success') setWalletBalance(data.data.balance);
     } catch (err) { console.error("Lỗi kết nối Payment Service:", err); }
@@ -56,7 +56,8 @@ function App() {
       const orderItems = cart.map(item => ({ productId: item.id, quantity: item.quantity }));
       
       // Đã cập nhật Link Render của Order Service
-      const res = await fetch('https://order-service-api-pl9d.onrender.com/api/orders', {
+      // Bắn API sang cổng 8002 (Order Service) thông qua Nginx chỉ đường
+      const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: USER_ID, items: orderItems })
